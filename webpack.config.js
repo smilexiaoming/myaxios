@@ -5,11 +5,14 @@ module.exports = (env = {}) => {
 
   return {
     mode: dev ? 'development' : 'production',
-    entry: path.join(__dirname, 'src/index.js'),
+    entry: ['@babel/polyfill',path.join(__dirname, 'src/index.js')],
     output: {
       filename: dev ? 'axios.js' : 'axios.min.js',
+      //path是相对文件的绝对路径，和output.publicPath、devServer.publicPath之间没有关系
       path: path.join(__dirname, 'dist'),
       sourceMapFilename: dev ? 'axios.map' : 'axios.min.map',
+      //output.publicPath仅仅对output打包后的文件中，使用“/”的静态路径有作用，打包时对这些静态路径进行动态合并
+      // publicPath:'/dist/'
     },
     devtool: 'source-map',
     module:{
@@ -27,8 +30,10 @@ module.exports = (env = {}) => {
       ]
     },
     devServer: {
-      port: 8080,
-      hot: true
+      port: 8000,
+      hot: true,
+      //devServer.publicPath将指定服务在内存中的根目录
+      // publicPath:'/dist/'
     }
   }
 }
